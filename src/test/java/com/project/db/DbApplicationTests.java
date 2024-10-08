@@ -7,8 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 class DbApplicationTests {
 
-
-    @Test
+	@Test
     @Transactional
 	void test(){}
 }
