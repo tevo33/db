@@ -1,5 +1,6 @@
 package com.project.db.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ public class RestaurantService
     public Optional<Restaurant> getRestaurant( Long id )
     {
         return repository.findById( id );
+    }
+
+    public List<Restaurant> getRestaurants()
+    {
+        return repository.findAll();
     }
 
     public void addRestaurant( Restaurant restaurant )

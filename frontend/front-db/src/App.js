@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Login from './components/Login';
+import Tabs from './components/Tabs';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Função para atualizar o estado de autenticação
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+  };
+
   return (
-    <div className="text-center bg-blue-100 min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-blue-500">
-        Teste
-      </h1>
+    <div className="mr-2 ml-2 px min-h-screen">
+      {!isLoggedIn ? (
+        <Login onLoginSuccess={handleLoginSuccess} />
+      ) : (
+        <Tabs />
+      )}
     </div>
   );
 }
