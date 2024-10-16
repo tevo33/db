@@ -1,8 +1,5 @@
 package com.project.db.controller;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,15 +15,17 @@ import com.project.db.service.VotationService;
 @RequestMapping( "/api/votation" )
 public class VotationController 
 {
-    @Autowired
     private VotationService service;
     
+    private VotationController( VotationService service )
+    {
+        this.service = service;
+    }
+
     @GetMapping( "/{id}" )
     public ResponseEntity<Votation> getVotation( @PathVariable Long id ) 
     {
-        Optional<Votation> votation = service.getVotation( id );
-        return votation.map( ResponseEntity::ok )
-                       .orElseGet( () -> ResponseEntity.notFound().build() );
+        return service.getVotation( id );
     }
 
     @PostMapping

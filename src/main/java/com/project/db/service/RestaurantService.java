@@ -1,9 +1,8 @@
 package com.project.db.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.project.db.model.Restaurant;
@@ -12,17 +11,29 @@ import com.project.db.repository.RestaurantRepository;
 @Service
 public class RestaurantService 
 {
-    @Autowired
     private RestaurantRepository repository;
-    
-    public Optional<Restaurant> getRestaurant( Long id )
+
+    private RestaurantService( RestaurantRepository repository )
     {
-        return repository.findById( id );
+        this.repository = repository;
+    }
+    
+    public ResponseEntity<Restaurant> getRestaurant( Long id )
+    {
+        return repository.findById( id ).map( ResponseEntity::ok )
+                         .orElseGet( () -> ResponseEntity.notFound().build() );
     }
 
-    public List<Restaurant> getRestaurants()
+    public ResponseEntity<List<Restaurant>> getRestaurants()
     {
-        return repository.findAll();
+        List<Restaurant> restaurantList = repository.findAll();
+        
+        if ( restaurantList.isEmpty() ) 
+        {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok( restaurantList );
     }
 
     public void addRestaurant( Restaurant restaurant )

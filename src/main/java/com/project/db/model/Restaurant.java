@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -25,10 +23,4 @@ public class Restaurant {
 
     @Column(name="image_url")
     private String imageUrl;
-
-    @OneToMany(mappedBy = "restaurant")
-    private List<Vote> votes;
-
-    @OneToMany(mappedBy = "winningRestaurant")
-    private List<Votation> wonVotations;
 }

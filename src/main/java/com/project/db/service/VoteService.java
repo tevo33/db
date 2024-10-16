@@ -2,7 +2,7 @@ package com.project.db.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.project.db.model.Vote;
@@ -11,12 +11,19 @@ import com.project.db.repository.VoteRepository;
 @Service
 public class VoteService 
 {
-    @Autowired
     private VoteRepository repository;
     
-    public Optional<Vote> getVote( Long id )
+    private VoteService( VoteRepository repository )
     {
-        return repository.findById( id );
+        this.repository = repository;
+    }
+
+    public ResponseEntity<Vote> getVote( Long id )
+    {
+        Optional<Vote> vote = repository.findById( id );
+
+        return vote.map( ResponseEntity::ok )
+                   .orElseGet( () -> ResponseEntity.notFound().build() );
     }
 
     public void addVote( Vote vote )

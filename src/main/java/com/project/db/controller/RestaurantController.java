@@ -1,9 +1,6 @@
 package com.project.db.controller;
 
 import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,28 +16,23 @@ import com.project.db.service.RestaurantService;
 @RequestMapping( "/api/restaurant" )
 public class RestaurantController 
 {
-    @Autowired
     private RestaurantService service;
+
+    private RestaurantController( RestaurantService service )
+    {
+        this.service = service;
+    }
     
     @GetMapping( "/{id}" )
     public ResponseEntity<Restaurant> getRestaurant( @PathVariable Long id ) 
     {
-        Optional<Restaurant> restaurant = service.getRestaurant( id );
-        return restaurant.map( ResponseEntity::ok )
-                         .orElseGet( () -> ResponseEntity.notFound().build() );
+        return service.getRestaurant( id ); 
     }
 
-    @GetMapping( "/all" )
+    @GetMapping()
     public ResponseEntity<List<Restaurant>> getRestaurants() 
     {
-        List<Restaurant> restaurantList = service.getRestaurants();
-        
-        if ( restaurantList.isEmpty() ) 
-        {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok( restaurantList );
+        return service.getRestaurants();
     }
 
     @PostMapping

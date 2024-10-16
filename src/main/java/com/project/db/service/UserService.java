@@ -1,10 +1,12 @@
 package com.project.db.service;
 
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.project.db.model.Restaurant;
 import com.project.db.model.User;
 import com.project.db.model.dtos.LoginRequest;
 import com.project.db.repository.UserRepository;
@@ -12,12 +14,31 @@ import com.project.db.repository.UserRepository;
 @Service
 public class UserService 
 {
-    @Autowired
     private UserRepository repository;
     
-    public Optional<User> getUser( Long id )
+    private UserService( UserRepository repository )
     {
-        return repository.findById( id );
+        this.repository = repository;
+    }
+
+    public ResponseEntity<User> getUser( Long id )
+    {
+        Optional<User> user = repository.findById( id );
+        
+        return user.map( ResponseEntity::ok )
+                   .orElseGet( () -> ResponseEntity.notFound().build() );
+    }
+
+    public ResponseEntity<List<User>> getUsers()
+    {
+        List<User> userList = repository.findAll();
+        
+        if ( userList.isEmpty() ) 
+        {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok( userList );
     }
 
     public void createUser( User user )
@@ -35,5 +56,10 @@ public class UserService
         }
 
         return false;
+    }
+
+    public void deleteUser( Long id ) 
+    {
+        repository.deleteById(id);
     }
 }

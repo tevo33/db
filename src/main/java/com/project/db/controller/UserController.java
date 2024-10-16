@@ -1,9 +1,9 @@
 package com.project.db.controller;
 
-import java.util.Optional;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,15 +19,23 @@ import com.project.db.service.UserService;
 @RequestMapping( "/api/user" )
 public class UserController 
 {
-    @Autowired
     private UserService service;
-    
+
+    private UserController( UserService service )
+    {
+        this.service = service;
+    }
+
     @GetMapping( "/{id}" )
     public ResponseEntity<User> getUser( @PathVariable Long id ) 
     {
-        Optional<User> user = service.getUser( id );
-        return user.map( ResponseEntity::ok )
-                   .orElseGet( () -> ResponseEntity.notFound().build() );
+        return service.getUser( id );
+    }
+    
+    @GetMapping()
+    public ResponseEntity<List<User>> getUsers() 
+    {
+        return service.getUsers();
     }
 
     @PostMapping
@@ -40,5 +48,11 @@ public class UserController
     public boolean verifyLogin( @RequestBody LoginRequest request ) 
     {
         return service.verifyLogin( request );
+    }
+
+    @DeleteMapping( "/{id}" )
+    public void deleteUser( @PathVariable Long id ) 
+    {
+        service.deleteUser( id );
     }
 }
